@@ -17,16 +17,16 @@ class App extends React.Component {
     axios.get('https://api.github.com/users/ChadDiaz')
     .then((res) => {
       console.log("cd: App.js: App: CDM: user data", res)
-      this.setState = {
+      this.setState({
         userCard: res.data,
-      }
+      })
     }).catch((err) => console.log('err user data', err.message))
     axios.get('https://api.github.com/users/ChadDiaz/following')
     .then((res) => {
       console.log("cd: App.js: App: CDM: followers data", res)
-      this.setState = {
+      this.setState({
         userFollowing: res.data
-      }
+      })
     }).catch((err) => console.log("err followers data", err.message))
   }
   
@@ -34,7 +34,7 @@ class App extends React.Component {
     return(
       <div className="App">
         <h1>Chad Diaz Github User Card</h1>
-        <UserCard userCard={this.state.userCard} userFollowing={this.state.userFollowing}/>
+        <UserCard user={this.state.userCard} following={this.state.userFollowing}/>
       </div>
     );
   }
