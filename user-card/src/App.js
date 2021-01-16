@@ -35,48 +35,47 @@ class App extends React.Component {
       .catch((err) => console.log("err followers data", err.message));
   }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps, prevState) {
     if (prevState.UserCard !== this.state.userCard) {
-      axios.get(`https://api.github.com/users/${this.state.userCard}`)
-      .then(res => {
-        console.log("cd: App.js: App: CDU: axios get new User", res)
-        this.setState({
-          userCard: res.data,
-        }).catch(err => console.log("err new user data", err.message))
-       })
-       axios.get(`https://api.github.com/users/${this.state.userCard}/following`)
-       .then(res => {
-         this.setState({
-           userFollowing: res.data,
-         }).catch(err => console.log('err new user followers data', err))
-       })
+      axios
+        .get(`https://api.github.com/users/${this.state.userCard}`)
+        .then((res) => {
+          console.log("cd: App.js: App: CDU: axios get new User", res);
+          this.setState({
+            userCard: res.data,
+          }).catch((err) => console.log("err new user data", err.message));
+        });
+      axios
+        .get(`https://api.github.com/users/${this.state.userCard}/following`)
+        .then((res) => {
+          this.setState({
+            userFollowing: res.data,
+          }).catch((err) => console.log("err new user followers data", err));
+        });
     }
   }
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
-      newUserCard: e.target.value
-    })
-  }
+      newUserCard: e.target.value,
+    });
+  };
 
-  handleClick = e => {
+  handleClick = (e) => {
     this.setState({
-      userCard: this.state.newUserCard
-    })
-  }
+      userCard: this.state.newUserCard,
+    });
+  };
 
   render() {
     return (
       <div className="App">
         <h1>Github User Card</h1>
-        <br/>
-        <input 
-          value={this.state.newUserCard}
-          onChange={this.handleChange}
-          />
-          <button onClick={this.handleClick}>Set User</button>
-          <br/>
-          <br/>
+        <br />
+        <input value={this.state.newUserCard} onChange={this.handleChange} />
+        <button onClick={this.handleClick}>Set User</button>
+        <br />
+        <br />
         <UserCard
           user={this.state.userCard}
           following={this.state.userFollowing}
