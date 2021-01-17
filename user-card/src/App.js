@@ -1,89 +1,78 @@
 import React from "react";
 import axios from "axios";
 import "./App.css";
-import UserCard from "./components/UserCard";
+import { UserForm } from "./components/UserForm";
+import { UserCard } from "./components/UserCard";
+import { Followers } from "./components/Followers";
+
 
 class App extends React.Component {
   constructor() {
     super();
     console.log("cd: App.js: App: constructor() -> was ran");
     this.state = {
-      userCard: {},
-      user: 'chaddiaz',
-      newUserCard: "chaddiaz",
-      userFollowing: [],
+      user: "chaddiaz",
+      userData: [],
+      followerData: [],
     };
   }
 
   componentDidMount() {
-    axios
-      .get("https://api.github.com/users/ChadDiaz")
-      .then((res) => {
-        console.log("cd: App.js: App: CDM: user data", res);
-        this.setState({
-          userCard: res.data,
-        });
-      })
-      .catch((err) => console.log("err user data", err.message));
-    axios
-      .get("https://api.github.com/users/ChadDiaz/following")
-      .then((res) => {
-        console.log("cd: App.js: App: CDM: followers data", res);
-        this.setState({
-          userFollowing: res.data,
-        });
-      })
-      .catch((err) => console.log("err followers data", err.message));
+    this.getUserData(this.state.user);
+    this.getFollowerData(this.state.user);
   }
+
+  getUserData = (userName) => {
+    const urlAPI = `https://api.github.com/users/${userName}`;
+    axios.get(urlAPI).then((res) => {
+      this.setState({
+        userData: res.data,
+      }).catch((err) => {
+        alert("User does not exist on Github");
+        console.log("error retrieving user data", err.message);
+      });
+    });
+  };
+
+  getFollowersData = (userName) => {
+    const urlAPI = `https://api.github.com/users/${userName}/followers`;
+    axios.get(urlAPI).then((res) => {
+      this.setState({
+        followerData: res.data,
+      }).catch((err) => {
+        alert("Not Following any GitHub Users");
+        console.log("error finding followers", err.message);
+      });
+    });
+  };
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.userCard !== this.state.userCard) {
-      axios
-        .get(`https://api.github.com/users/${this.state.user}`)
-        .then((res) => {
-          console.log("cd: App.js: App: CDU: axios get new User", res);
-          this.setState({
-            userCard: res.data,
-          }).catch((err) => console.log("err new user data", err.message));
-        });
-      axios
-        .get(`https://api.github.com/users/${this.state.user}/following`)
-        .then((res) => {
-          this.setState({
-            userFollowing: res.data,
-          }).catch((err) => console.log("err new user followers data", err));
-        });
-    }
+    if (prevState.user !== this.state.user) {
+      this.getUserData(this.state.user)
+      this.getFollowerData(this.state.user)
+  }
+}
+
+  getNewUser = (userName) => {
+    this.setState({
+      user: userName,
+    })
   }
 
-  handleClick = (e) => {
-    this.setState({
-      userCard: this.state.newUserCard,
-    });
-  };
-
-  handleChange = (e) => {
-    this.setState({
-      newUserCard: e.target.value,
-    });
-  };
-
-  
   render() {
     return (
       <div className="App">
-        <h1>Github User Card</h1>
-        <br />
-        <input value={this.state.newUserCard} onChange={this.handleChange} />
-        <button onClick={this.handleClick}>Set User</button>
-        <br />
-        <br />
-        <UserCard
-          user={this.state.userCard}
-          following={this.state.userFollowing}
-        />
+        <header>
+          <h1>{this.state.userData.name !== null ? this.state.userData.name : this.state.userData.login} GitHub Info</h1>
+        <UserForm getNewUser={this.getNewUser}/>
+        </header>
+        
+        <UserCard user={this.state.userData} />
+        <Followers followers={this.state.followerData} />
+
       </div>
     );
   }
 }
+
 export default App;
