@@ -1,7 +1,7 @@
 import React from 'react'
-import FollowerCard  from './FollowerCard'
+import {FollowerCard}  from './FollowerCard'
 
-export const Followers = (props) => {
+const Followers = (props) => {
     return (
         <div>
             <h2>{props.followers.length > 0 ? `${props.followers.length} Followers` : "No Followers"}</h2>
@@ -13,3 +13,4 @@ export const Followers = (props) => {
         </div>
     )
 }
+export default Followers

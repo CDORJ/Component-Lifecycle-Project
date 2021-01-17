@@ -1,6 +1,6 @@
 import React from "react";
 
-export const UserCard = (props) => {
+export default function UserCard(props) {
   return (
     <div>
       <div>
@@ -37,4 +37,4 @@ export const UserCard = (props) => {
       </div>
     </div>
   );
-};
+}
