@@ -9,7 +9,8 @@ class App extends React.Component {
     console.log("cd: App.js: App: constructor() -> was ran");
     this.state = {
       userCard: {},
-      newUserCard: {},
+      user: 'chaddiaz',
+      newUserCard: "chaddiaz",
       userFollowing: [],
     };
   }
@@ -36,9 +37,9 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.UserCard !== this.state.userCard) {
+    if (prevState.userCard !== this.state.userCard) {
       axios
-        .get(`https://api.github.com/users/${this.state.userCard}`)
+        .get(`https://api.github.com/users/${this.state.user}`)
         .then((res) => {
           console.log("cd: App.js: App: CDU: axios get new User", res);
           this.setState({
@@ -46,7 +47,7 @@ class App extends React.Component {
           }).catch((err) => console.log("err new user data", err.message));
         });
       axios
-        .get(`https://api.github.com/users/${this.state.userCard}/following`)
+        .get(`https://api.github.com/users/${this.state.user}/following`)
         .then((res) => {
           this.setState({
             userFollowing: res.data,
@@ -55,18 +56,19 @@ class App extends React.Component {
     }
   }
 
-  handleChange = (e) => {
-    this.setState({
-      newUserCard: e.target.value,
-    });
-  };
-
   handleClick = (e) => {
     this.setState({
       userCard: this.state.newUserCard,
     });
   };
 
+  handleChange = (e) => {
+    this.setState({
+      newUserCard: e.target.value,
+    });
+  };
+
+  
   render() {
     return (
       <div className="App">
