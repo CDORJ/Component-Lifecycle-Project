@@ -18,37 +18,43 @@ class App extends React.Component {
 
   componentDidMount() {
     this.getUserData(this.state.user);
-    this.getFollowerData(this.state.user);
+    this.getFollowersData(this.state.user);
   }
 
   getUserData = (userName) => {
     const urlAPI = `https://api.github.com/users/${userName}`;
-    axios.get(urlAPI).then((res) => {
-      this.setState({
-        userData: res.data,
-      }).catch((err) => {
+    axios
+      .get(urlAPI)
+      .then((res) => {
+        this.setState({
+          userData: res.data,
+        });
+      })
+      .catch((err) => {
         alert("User does not exist on Github");
         console.log("error retrieving user data", err.message);
       });
-    });
   };
 
   getFollowersData = (userName) => {
     const urlAPI = `https://api.github.com/users/${userName}/followers`;
-    axios.get(urlAPI).then((res) => {
-      this.setState({
-        followerData: res.data,
-      }).catch((err) => {
+    axios
+      .get(urlAPI)
+      .then((res) => {
+        this.setState({
+          followerData: res.data,
+        });
+      })
+      .catch((err) => {
         alert("Not Following any GitHub Users");
         console.log("error finding followers", err.message);
       });
-    });
   };
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.user !== this.state.user) {
       this.getUserData(this.state.user);
-      this.getFollowerData(this.state.user);
+      this.getFollowersData(this.state.user);
     }
   }
 
@@ -69,6 +75,7 @@ class App extends React.Component {
             GitHub Info
           </h1>
           <UserForm getNewUser={this.getNewUser} />
+          <br/>
         </header>
 
         <UserCard user={this.state.userData} />
